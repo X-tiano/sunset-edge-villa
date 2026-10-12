@@ -28,7 +28,7 @@ Then open http://localhost:8000.
 
 ## Before going live
 
-- The enquiry form sends to info@christianopropertymanagement.com through FormSubmit (formsubmit.co). The first submission triggers a one-time activation email to that inbox; click the link in it, or later requests are not delivered.
+- The enquiry form posts to `api/enquiry.js`, a Vercel function that emails each request to info@christianopropertymanagement.com through Resend, with reply-to set to the enquirer. It needs `RESEND_API_KEY` in the Vercel project's environment variables. Until that is set, the form shows visitors the WhatsApp and email fallback.
 - The link-preview image and page URL point at the Vercel address. Update `SITE` in the build if a custom domain is added.
 - Items marked TBC in the technical specifications are still being confirmed.
 - Fonts load from Google Fonts (Cormorant Garamond and DM Sans).

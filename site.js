@@ -3,7 +3,8 @@
 (function () {
   var EMAIL = 'info@christianopropertymanagement.com';
   var WHATSAPP = '35679790202';
-  var ENDPOINT = 'https://formsubmit.co/ajax/' + EMAIL;
+  var ENDPOINT = '/api/enquiry';
+  var LOADED = Date.now();
   var WA_TEXT = 'Hello, I would like to arrange a viewing at Sunset Edge Villa.';
 
   var css = document.createElement('style');
@@ -81,9 +82,8 @@
     ['name', 'email', 'phone', 'type', 'dates', 'guests', 'message'].forEach(function (n) {
       if (form.elements[n]) data[n] = form.elements[n].value.trim();
     });
-    data._subject = 'Viewing request: Sunset Edge Villa (' + (data.type || 'enquiry') + ')';
-    data._replyto = data.email;
-    data._template = 'table';
+    data.page = location.pathname;
+    data.elapsed = Date.now() - LOADED;
 
     var btn = form.querySelector('button[type="submit"]');
     busy = true;
@@ -97,7 +97,7 @@
     })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {
-        if (!res.ok || String(res.j.success) === 'false') throw new Error('send failed');
+        if (!res.ok || !res.j.ok) throw new Error('send failed');
         form.reset();
         say('Thank you, ' + (data.name.split(' ')[0] || '') + '. Your request has reached us and we will be in touch shortly to arrange a viewing.', 10000);
       })

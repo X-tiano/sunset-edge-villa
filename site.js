@@ -109,6 +109,15 @@
       .then(function () { busy = false; if (btn) btn.removeAttribute('aria-busy'); });
   });
 
-  function ready() { watchEnquire(); }
+  /* Pre-select the event type when arriving from an idea page (?type=...) */
+  function prefill() {
+    var t = new URLSearchParams(location.search).get('type');
+    var form = document.getElementById('viewing-form');
+    if (!t || !form || !form.elements.type) return;
+    var sel = form.elements.type;
+    for (var i = 0; i < sel.options.length; i++) if (sel.options[i].text === t) { sel.selectedIndex = i; break; }
+  }
+
+  function ready() { watchEnquire(); prefill(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready); else ready();
 })();
